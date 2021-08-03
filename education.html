@@ -26,7 +26,6 @@
     .preamble {
       border: 3px solid red;
     }
-
     .block {
   display: block;
   width: 100%;
@@ -43,23 +42,25 @@
      <body>
 
       <div class="preamble">
+        
           <p>Gun violence in the United States has been named a Public Health Problem by the Centers for Disease Control.   However, due to a lack of federal funding, little data has been collected on the issue.   This narrative will start an exploration of common factors that are associated with rates of gun injuries and deaths</p>
         
-          <p>First, we will examine several basic demographic factors that might affect the rate of gun deaths (accidental or intentional) on a state wide basis.  Factors to examine include average household income, the percentage of residents that live in an urban environment, the rate of violent crime and the median age of the residents.  Select the factor you are interested in exploring.   Hover over the elements to see what state it represents.   Note states are colored by the region.  </p>
+          <p>Now, we will examine several the effect of education on the rate of gun deaths (accidental or intentional) on a state wide basis.  Multiple metrics might be used, so the data will be examined by high school, bachelors and advanced degrees to investigate if increased education might affect gun death rates.<br>
+           Select the factor you are interested in exploring.   Hover over the elements to see what state it represents.   Note states are colored by the region.   Yellow=New England, Blue = South, Red=MidWest, Green=West.</p>
           
 
 
       </div>
 	
-    <button onclick="updateX('INCOME')">Average Household Income</button>
-    <button onclick="updateX('URBAN')">Percentage of Residents Living in Urban Neighborhoods</button>
-    <button onclick="updateX('VCRIME')">Rate of Violent Crime per 100,000 Residents</button>
-    <button onclick="updateX('AGE')">Median Age of Residents</button>
+    <button onclick="updateX('HS')">Percent of Residents with High School Degrees</button>
+    <button onclick="updateX('BACHELORS')">Percent of Residents with Bachelors Degrees</button>
+    <button onclick="updateX('ADVANCED')">Percent of Residents with Advanced Degrees</button>
+    
     <div id="graph"></div>
 <script>
     
 
-    
+    console.log("ready to go line 63");
     
 	  var margin = {top: 10, right: 20, bottom: 50, left: 50};
 	  var width = 1000 - margin.left - margin.right;
@@ -80,19 +81,18 @@ function updateX(selectedVar) {
   
   //initialising y axis labels
   const map1 = new Map();
-  map1.set("INCOME","Average Household Income");
-  map1.set("URBAN","Percentage of Residents Living in Urban Neighborhoods");
-  map1.set("VCRIME","Rate of Violent Crime per 100,000 Residents" );
-  map1.set("AGE","Median Age of Residents");
-
+  map1.set("HS","Percent of Residents with High School Degrees");
+  map1.set("BACHELORS","Percent of Residents with Bachelors Degrees");
+  map1.set("ADVANCED","Percent of Residents with Advanced Degrees" );
+  
   const colorMap = new Map();
   colorMap.set("1", "#DDAA33");
   colorMap.set("2", "#BB5566");
   colorMap.set("3", "#4477AA");
-  colorMap.set("4", "#228833")
+  colorMap.set("4", "#228833");
     
   
- 
+  console.log("ready to go line 95");
    var svg = d3.select("svg");
 
    svg.selectAll("*").remove();
@@ -121,7 +121,7 @@ function updateX(selectedVar) {
    svg.append("g")
    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
     .call(yAxis);
-
+    console.log("ready to go line 124");
     //text label for the y axis
     svg.append("text")
       .attr("transform", "rotate(-90)")
@@ -157,66 +157,37 @@ function updateX(selectedVar) {
   var div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity",0);
+    console.log("ready to go line 160");
 
-
-    if(selectedVar === 'INCOME') { 
+    if(selectedVar === 'HS') { 
     const annotations  =[
   {
     note: {
-      label: "Median Household Income",
-      title: "Note a small amount of  clustering of Southern states with high gun deaths and low income"
+      label: "Percent of Residents with High School Degrees",
+      title: "No relationship between Percent of Residents with high school degrees is noted."
     },
-    type: d3.annotationCalloutCircle,
-    subject: {
-      radius:150,
-      radiusPadding:20
-       },
-    x: 450,
+    x: 500,
     y: 130,
     dy: 100,
-    dx: -100
+    dx: -200
   }
 ]
+
 const makeAnnotations = d3.annotation().annotations(annotations)
     d3.select("#scatter")
       .append("g").call(makeAnnotations)
 
- const annotations2  =[
-  {
-    note: {
-      label: "Median Household Income",
-      title: "Note a small amount of  clustering of New England states with low gun deaths and high income"
-    },
-    type: d3.annotationCalloutCircle,
-    subject: {
-      radius:120,
-      radiusPadding:20
-       },
-    x: 700,
-    y: 350,
-    dy: 50,
-    dx: 100
-  }
-]
-const makeAnnotations2 = d3.annotation().annotations(annotations2)
-    d3.select("#scatter")
-      .append("g").call(makeAnnotations2)
-
-
-
-
-
-
-} else if(selectedVar === "URBAN")
+ 
+} else if(selectedVar === "BACHELORS")
  {
   annotations =[
   {
     note: {
       label: "",
-      title: "No relationship between percent urban and gun deaths noted."
+      title: "Initial analysis shows some potential correlation between percent of bachelors degrees and gun deaths."
     },
     x: 450,
-    y: 300,
+    y: 200,
     dy: 100,
     dx: -100
   }
@@ -225,17 +196,17 @@ const makeAnnotations = d3.annotation().annotations(annotations)
     d3.select("#scatter")
       .append("g").call(makeAnnotations)
 }
-else if(selectedVar === "VCRIME")
+else if(selectedVar === "ADVANCED")
  {
   annotations =[
   {
     note: {
       label: "",
-      title: "Note western and southern states show higher overall gun deaths but no relationship with overall violent crime rate it noted."
+      title: "No correlation was noted with advanced degrees."
     },
     x: 600,
     y: 100,
-    dy: 100,
+    dy: 50,
     dx: 150
   }
 ]
@@ -244,24 +215,7 @@ const makeAnnotations = d3.annotation().annotations(annotations)
       .append("g").call(makeAnnotations)
 }
     
-else if(selectedVar === "AGE")
- {
-  annotations =[
-  {
-    note: {
-      label: "",
-      title: "No relationship between average age and gun deaths."
-    },
-    x: 500,
-    y: 200,
-    dy: 100,
-    dx: -150
-  }
-]
-const makeAnnotations = d3.annotation().annotations(annotations)
-    d3.select("#scatter")
-      .append("g").call(makeAnnotations)
-}
+
     svg.append("g")
     .selectAll("dot")
     .data(data)
@@ -285,14 +239,14 @@ const makeAnnotations = d3.annotation().annotations(annotations)
     
 
     
-  
+    console.log("ready to go line 242");  
   })}
 
 
   
 </script>
 <div>
-<button class="block" onclick="window.location.href='education.html'"">Page 2</button>
-</div>     
-</body>
+  <button class="block" onclick="window.location.href='policy3.html'"">Page 3</button>
+  </div>  
+     </body>
 </html>
